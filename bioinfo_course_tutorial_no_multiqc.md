@@ -59,6 +59,9 @@ bioinfo_course/
 
 ## 1.1 基本命令练习
 
+1. https://book.ncrnalab.org/teaching/part-i.-programming-skills/1.linux/1.1.linux-basic-command
+2. https://www.runoob.com/linux/linux-command-manual.html
+
 ```bash
 cd /data/work/bioinfo_course
 
@@ -108,6 +111,8 @@ du -sh 02_qc_fastqc 03_rnaseq_upstream
 ---
 
 ## 1.2 Shell 脚本练习
+练习参考链接：
+1. https://book.ncrnalab.org/teaching/part-i.-programming-skills/1.linux/1.3.linux-bash
 
 进入 Shell 练习目录：
 
@@ -548,10 +553,10 @@ Geneid    CTRL_1    CTRL_2    CTRL_3    CASE_1    CASE_2    CASE_3
 进入目录：
 
 ```bash
-cd /data/work/bioinfo_course/04_rnaseq_matrix
+/data/work/bioinfo_course/04_rnaseq_matrix
 ```
 
-打开 Notebook：
+打开 Notebook，选择内核为`R 4.4.3`：
 
 ```text
 01_RNA-seq_annotated.ipynb
@@ -584,10 +589,10 @@ teaching_figures/
 进入目录：
 
 ```bash
-cd /data/work/bioinfo_course/05_matrixeqtl
+/data/work/bioinfo_course/05_matrixeqtl
 ```
 
-打开 Notebook：
+打开 Notebook,选择内核为`R 4.4.3`：
 
 ```text
 01_MatrixEQTL_demo_notebook.ipynb
@@ -615,6 +620,28 @@ cd /data/work/bioinfo_course/05_matrixeqtl
 sudo rm -rf /opt/bioinfo_course
 
 sudo cp -a /data/work/bioinfo_course /opt/bioinfo_course
+
+cd /opt/bioinfo_course
+
+# 删除上游流程已有结果
+sudo rm -rf 03_rnaseq_upstream/sim_case_control/pipeline_result
+sudo mkdir -p 03_rnaseq_upstream/sim_case_control/pipeline_result
+
+# 删除 FastQC 已有结果
+sudo rm -rf 02_qc_fastqc/qc_report
+sudo mkdir -p 02_qc_fastqc/qc_report
+
+# 删除矩阵分析已有结果
+sudo rm -rf 04_rnaseq_matrix/teaching_results
+sudo rm -rf 04_rnaseq_matrix/teaching_figures
+sudo mkdir -p 04_rnaseq_matrix/teaching_results
+sudo mkdir -p 04_rnaseq_matrix/teaching_figures
+
+# 开放学生可读权限
+sudo chmod -R a+rX /opt/bioinfo_course
+
+# 检查
+tree -L 3 /opt/bioinfo_course
 ```
 
 检查：
@@ -627,10 +654,9 @@ du -sh /opt/bioinfo_course
 
 ---
 
-# 七、教学提醒
+# 七、提醒
 
-1. `/opt/bioinfo_course` 是镜像内置课程数据目录，学生应复制到 `/data/work` 后操作。
+1. `/opt/bioinfo_course` 是镜像内置课程数据目录，应复制到 `/data/work` 后操作。
 2. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
 3. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
 4. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
-5. 本版教程不再包含 MultiQC 分析步骤。
