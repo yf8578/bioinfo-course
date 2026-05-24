@@ -1,33 +1,126 @@
 # 生物信息学入门课程：云平台实践教程
 
-> 镜像内置课程数据目录：`/opt/bioinfo_course`  
-> 学生实际操作目录：`/data/work/bioinfo_course`
+> 课程根目录：`bioinfo_course/`
 
-本课程所有示例数据、参考文件、索引、脚本和 Notebook 均默认已经整理在：
+本教程后续命令默认从课程根目录 `bioinfo_course/` 开始运行。为了兼容指定镜像、Colab 和其他 Linux 环境，正文尽量使用相对路径，不强依赖 `/opt` 或 `/data/work`。
+
+---
+
+# 0. 数据准备与路径约定
+
+## 0.1 使用指定课程镜像
+
+如果使用课程指定镜像，课程数据已经内置在：
 
 ```bash
 /opt/bioinfo_course
 ```
 
-上课或练习时，**第一步统一把课程数据从 `/opt` 复制到 `/data/work`**：
+上课或练习时，先把只读或公共数据复制到自己的工作目录。下面以当前目录为工作目录：
 
 ```bash
-cd /data/work
+cp -r /opt/bioinfo_course ./bioinfo_course
 
-rm -rf /data/work/bioinfo_course
-
-cp -r /opt/bioinfo_course /data/work/bioinfo_course
-
-cd /data/work/bioinfo_course
+cd bioinfo_course
 
 tree -L 2
 ```
 
-后续所有命令均默认在 `/data/work/bioinfo_course` 下运行，不再重复说明数据路径。
+如果平台要求使用 `/data/work`，也可以写成：
+
+```bash
+cd /data/work
+
+rm -rf bioinfo_course
+
+cp -r /opt/bioinfo_course ./bioinfo_course
+
+cd bioinfo_course
+
+tree -L 2
+```
+
+## 0.2 使用 Colab 或其他环境
+
+如果不使用课程镜像，可以直接从 GitHub Release 下载课程数据。推荐在 Colab 中运行：
+
+```bash
+curl -L https://raw.githubusercontent.com/yf8578/bioinfo-course/main/download_bioinfo_course.sh -o download_bioinfo_course.sh
+
+bash download_bioinfo_course.sh
+
+tar -xzf bioinfo_course.tar.gz
+
+cd bioinfo_course
+
+tree -L 2
+```
+
+如果当前环境没有 `tree`，可以先跳过，或安装：
+
+```bash
+apt-get update
+
+apt-get install -y tree
+```
+
+## 0.3 手动下载、合并和解压数据
+
+如果需要手动处理分卷文件，可以使用下面的命令。三个 `part-*` 文件合并后就是完整的 `bioinfo_course.tar.gz`：
+
+```bash
+mkdir -p bioinfo_course_download
+
+cd bioinfo_course_download
+
+curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-00
+
+curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-01
+
+curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-02
+
+curl -L -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/SHA256SUMS
+
+sha256sum -c SHA256SUMS
+
+cat bioinfo_course.tar.gz.part-* > ../bioinfo_course.tar.gz
+
+cd ..
+
+tar -xzf bioinfo_course.tar.gz
+
+cd bioinfo_course
+```
+
+在 macOS 或部分系统中，如果没有 `sha256sum`，可以改用：
+
+```bash
+shasum -a 256 -c SHA256SUMS
+```
+
+## 0.4 后续命令的路径规则
+
+完成上述任意一种准备方式后，当前目录应为：
+
+```bash
+bioinfo_course
+```
+
+后续章节默认从这里开始执行命令。每个章节开始前，先确认自己位于课程根目录。进入子目录时使用相对路径，例如：
+
+```bash
+cd 02_qc_fastqc
+```
+
+如果已经进入其他子目录，先回到课程根目录：
+
+```bash
+cd /path/to/bioinfo_course
+```
 
 ---
 
-# 0. 课程目录结构
+# 1. 课程目录结构
 
 ```text
 bioinfo_course/
@@ -63,8 +156,6 @@ bioinfo_course/
 2. https://www.runoob.com/linux/linux-command-manual.html
 
 ```bash
-cd /data/work/bioinfo_course
-
 pwd
 
 ls
@@ -117,7 +208,7 @@ du -sh 02_qc_fastqc 03_rnaseq_upstream
 进入 Shell 练习目录：
 
 ```bash
-cd /data/work/bioinfo_course/01_linux_shell
+cd 01_linux_shell
 
 ls -lh
 
@@ -144,7 +235,7 @@ done
 ## 2.1 进入质控目录
 
 ```bash
-cd /data/work/bioinfo_course/02_qc_fastqc
+cd 02_qc_fastqc
 
 tree
 ```
@@ -258,7 +349,7 @@ featureCounts 汇总所有 BAM
 ## 3.1 进入 RNA-seq 上游流程目录
 
 ```bash
-cd /data/work/bioinfo_course/03_rnaseq_upstream
+cd 03_rnaseq_upstream
 
 tree -L 3
 ```
@@ -553,7 +644,7 @@ Geneid    CTRL_1    CTRL_2    CTRL_3    CASE_1    CASE_2    CASE_3
 进入目录：
 
 ```bash
-/data/work/bioinfo_course/04_rnaseq_matrix
+cd 04_rnaseq_matrix
 ```
 
 打开 Notebook，选择内核为`R 4.4.3`：
@@ -589,7 +680,7 @@ teaching_figures/
 进入目录：
 
 ```bash
-/data/work/bioinfo_course/05_matrixeqtl
+cd 05_matrixeqtl
 ```
 
 打开 Notebook,选择内核为`R 4.4.3`：
@@ -612,14 +703,14 @@ teaching_figures/
 
 ---
 
-# 六、教师维护：更新课程数据到 /opt
+# 六、教师维护：更新课程数据到镜像目录
 
-如果你在 `/data/work/bioinfo_course` 中更新了课程数据，需要保存回镜像目录：
+本节只适用于维护课程镜像的教师。如果你在工作目录中的 `bioinfo_course/` 更新了课程数据，需要保存回镜像内置目录 `/opt/bioinfo_course`，可以在 `bioinfo_course/` 的上一级目录运行：
 
 ```bash
 sudo rm -rf /opt/bioinfo_course
 
-sudo cp -a /data/work/bioinfo_course /opt/bioinfo_course
+sudo cp -a bioinfo_course /opt/bioinfo_course
 
 cd /opt/bioinfo_course
 
@@ -656,7 +747,8 @@ du -sh /opt/bioinfo_course
 
 # 七、提醒
 
-1. `/opt/bioinfo_course` 是镜像内置课程数据目录，应复制到 `/data/work` 后操作。
-2. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
-3. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
-4. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
+1. 使用指定课程镜像时，`/opt/bioinfo_course` 是镜像内置课程数据目录，建议复制到自己的工作目录后操作。
+2. 使用 Colab 或其他环境时，下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
+3. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
+4. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
+5. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
