@@ -120,7 +120,124 @@ cd /path/to/bioinfo_course
 
 ---
 
-# 1. 课程目录结构
+# 1. 软件环境准备
+
+如果使用课程指定镜像，通常已经预装了本课程需要的软件，可以直接进入后续章节。如果使用 Colab、普通 Linux 服务器或新环境，可以按下面步骤安装 Miniforge 并创建 `bioinfo` 环境。
+
+## 1.1 下载并安装 Miniforge
+
+下载 Miniforge 安装脚本：
+
+```bash
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+```
+
+静默安装到当前用户目录：
+
+```bash
+bash "Miniforge3-$(uname)-$(uname -m).sh" -b -p "${HOME}/miniforge3"
+```
+
+加载 conda：
+
+```bash
+source "${HOME}/miniforge3/etc/profile.d/conda.sh"
+```
+
+可选：把 conda 初始化到 shell。Linux/Colab 常用 bash：
+
+```bash
+conda init bash
+```
+
+macOS 终端如果使用 zsh，可以运行：
+
+```bash
+conda init zsh
+```
+
+配置频道：
+
+```bash
+conda config --add channels conda-forge
+
+conda config --add channels bioconda
+
+conda config --set channel_priority strict
+```
+
+## 1.2 创建 bioinfo 环境
+
+创建课程环境：
+
+```bash
+conda create -y -n bioinfo -c conda-forge -c bioconda \
+  fastqc \
+  fastp \
+  hisat2 \
+  subread \
+  samtools \
+  r-base \
+  r-irkernel \
+  r-tidyverse \
+  r-ggplot2 \
+  r-pheatmap \
+  r-biocmanager \
+  bioconductor-deseq2 \
+  bioconductor-clusterprofiler \
+  bioconductor-org.hs.eg.db \
+  bioconductor-enrichplot
+```
+
+激活环境：
+
+```bash
+conda activate bioinfo
+```
+
+说明：`featureCounts` 在 conda 中由 `subread` 包提供。
+
+如果需要在 Jupyter Notebook 中使用这个 R 环境，可以注册 R kernel：
+
+```bash
+Rscript -e 'IRkernel::installspec(name = "bioinfo-r", displayname = "R bioinfo")'
+```
+
+## 1.3 安装 MatrixEQTL
+
+`MatrixEQTL` 可以在 R 中从 CRAN 安装：
+
+```bash
+Rscript -e 'install.packages("MatrixEQTL", repos = "https://cloud.r-project.org")'
+```
+
+如果后续做富集分析时发现 Bioconductor 包缺失，可以在 `bioinfo` 环境中补装：
+
+```bash
+Rscript -e 'BiocManager::install(c("clusterProfiler", "org.Hs.eg.db", "enrichplot", "DESeq2"), ask = FALSE, update = FALSE)'
+```
+
+## 1.4 检查软件是否可用
+
+```bash
+conda activate bioinfo
+
+fastqc --version
+
+fastp --version
+
+hisat2 --version
+
+featureCounts -v
+
+R --version
+
+Rscript -e 'library(DESeq2); library(clusterProfiler); library(org.Hs.eg.db); library(enrichplot); library(MatrixEQTL); sessionInfo()'
+```
+
+---
+
+# 2. 课程目录结构
 
 ```text
 bioinfo_course/
