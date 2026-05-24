@@ -64,7 +64,31 @@ apt-get update
 apt-get install -y tree
 ```
 
-## 0.3 手动下载、合并和解压数据
+## 0.3 在 Colab 中打开 Notebook
+
+课程数据包里自带的 `.ipynb` 文件在解压后可以作为普通文件使用，但 Colab 不能直接打开 GitHub Release 压缩包内部的 Notebook。为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
+
+```text
+04_rnaseq_matrix/00_simdata.ipynb
+04_rnaseq_matrix/01_RNA-seq_annotated.ipynb
+05_matrixeqtl/01_MatrixEQTL_demo_notebook.ipynb
+```
+
+可以在 Colab 中选择：
+
+```text
+File -> Open notebook -> GitHub
+```
+
+然后输入仓库地址：
+
+```text
+https://github.com/yf8578/bioinfo-course
+```
+
+打开 Notebook 后，先按前面的步骤下载并解压 `bioinfo_course.tar.gz`，再运行分析代码。Notebook 使用 R 语言；如果使用普通 Linux/Jupyter 环境，需要先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
+
+## 0.4 手动下载、合并和解压数据
 
 如果需要手动处理分卷文件，可以使用下面的命令。三个 `part-*` 文件合并后就是完整的 `bioinfo_course.tar.gz`：
 
@@ -98,7 +122,7 @@ cd bioinfo_course
 shasum -a 256 -c SHA256SUMS
 ```
 
-## 0.4 后续命令的路径规则
+## 0.5 后续命令的路径规则
 
 完成上述任意一种准备方式后，当前目录应为：
 
