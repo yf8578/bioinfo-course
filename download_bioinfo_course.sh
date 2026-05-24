@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="${BIOINFO_COURSE_REPO:-OWNER/bioinfo-course}"
+REPO="${BIOINFO_COURSE_REPO:-yf8578/bioinfo-course}"
 TAG="${BIOINFO_COURSE_TAG:-v1.0.0}"
 OUT="${BIOINFO_COURSE_OUT:-bioinfo_course.tar.gz}"
 

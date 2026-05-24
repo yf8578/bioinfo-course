@@ -9,10 +9,8 @@ The full dataset archive is distributed through GitHub Releases because the arch
 After the first release is uploaded, run this in Colab:
 
 ```python
-!bash <(curl -L https://raw.githubusercontent.com/OWNER/bioinfo-course/main/download_bioinfo_course.sh)
+!bash <(curl -L https://raw.githubusercontent.com/yf8578/bioinfo-course/main/download_bioinfo_course.sh)
 ```
-
-Replace `OWNER` with the GitHub account or organization that owns the repository.
 
 The script downloads all release parts, verifies the SHA-256 checksum if available, and reconstructs:
 
