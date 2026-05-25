@@ -69,6 +69,8 @@ apt-get install -y tree
 课程数据包里自带的 `.ipynb` 文件在解压后可以作为普通文件使用，但 Colab 不能直接打开 GitHub Release 压缩包内部的 Notebook。为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
 
 ```text
+04_rnaseq_matrix/00_simdata.ipynb
+04_rnaseq_matrix/01_RNA-seq_annotated.ipynb
 04_rnaseq_matrix/00_simdata_and_RNAseq_analysis.ipynb
 05_matrixeqtl/01_MatrixEQTL_demo_notebook.ipynb
 ```
@@ -278,6 +280,8 @@ bioinfo_course/
 │   ├── scripts/
 │   └── sim_case_control/
 ├── 04_rnaseq_matrix/
+│   ├── 00_simdata.ipynb
+│   ├── 01_RNA-seq_annotated.ipynb
 │   ├── 00_simdata_and_RNAseq_analysis.ipynb
 │   ├── teaching_results/
 │   └── teaching_figures/
@@ -786,13 +790,20 @@ Geneid    CTRL_1    CTRL_2    CTRL_3    CASE_1    CASE_2    CASE_3
 cd 04_rnaseq_matrix
 ```
 
-打开 Notebook，选择 R 内核：
+推荐优先打开合并版 Notebook，选择 R 内核：
 
 ```text
 00_simdata_and_RNAseq_analysis.ipynb
 ```
 
 该 Notebook 可以在 Colab 或其他 Jupyter 环境中运行，不需要提前准备 04 章节的数据文件；运行时会自行安装缺失包并生成模拟数据。
+
+同时保留原始拆分版 Notebook：
+
+```text
+00_simdata.ipynb
+01_RNA-seq_annotated.ipynb
+```
 
 该 Notebook 包含：
 
