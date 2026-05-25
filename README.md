@@ -70,9 +70,9 @@ cd bioinfo_course
 tree -L 2
 ```
 
-## 0.2 使用 Colab 或其他环境
+## 0.2 使用其他环境
 
-如果不使用课程镜像，可以直接从 GitHub Release 下载课程数据。推荐在 Colab 中运行：
+如果不使用课程镜像，可以直接从 GitHub Release 下载课程数据：
 
 ```bash
 curl -L https://raw.githubusercontent.com/yf8578/bioinfo-course/main/download_bioinfo_course.sh -o download_bioinfo_course.sh
@@ -99,8 +99,7 @@ apt-get install -y tree
 课程数据包里自带的 `.ipynb` 文件在解压后可以作为普通文件使用，但 Colab 不能直接打开 GitHub Release 压缩包内部的 Notebook。为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
 
 ```text
-04_rnaseq_matrix/00_simdata.ipynb
-04_rnaseq_matrix/01_RNA-seq_annotated.ipynb
+04_rnaseq_matrix/00_simdata_and_RNAseq_analysis.ipynb
 05_matrixeqtl/01_MatrixEQTL_demo_notebook.ipynb
 ```
 
@@ -309,8 +308,7 @@ bioinfo_course/
 │   ├── scripts/
 │   └── sim_case_control/
 ├── 04_rnaseq_matrix/
-│   ├── 00_simdata.ipynb
-│   ├── 01_RNA-seq_annotated.ipynb
+│   ├── 00_simdata_and_RNAseq_analysis.ipynb
 │   ├── teaching_results/
 │   └── teaching_figures/
 └── 05_matrixeqtl/
@@ -818,24 +816,28 @@ Geneid    CTRL_1    CTRL_2    CTRL_3    CASE_1    CASE_2    CASE_3
 cd 04_rnaseq_matrix
 ```
 
-打开 Notebook，选择内核为`R 4.4.3`：
+打开 Notebook，选择 R 内核：
 
 ```text
-01_RNA-seq_annotated.ipynb
+00_simdata_and_RNAseq_analysis.ipynb
 ```
+
+该 Notebook 可以在 Colab 或其他 Jupyter 环境中运行，不需要提前准备 04 章节的数据文件；运行时会自行安装缺失包并生成模拟数据。
 
 该 Notebook 包含：
 
-1. 读取 count matrix 和样本信息；
-2. 样本层面 QC；
-3. library size；
-4. detected genes；
-5. DESeq2 标准化；
-6. VST；
-7. PCA；
-8. disease vs control 差异分析；
-9. 火山图；
-10. GO Biological Process 富集分析。
+1. 安装缺失的 R / Bioconductor 包；
+2. 生成仿真 RNA-seq count matrix 和样本信息；
+3. 读取 count matrix 和样本信息；
+4. 样本层面 QC；
+5. library size；
+6. detected genes；
+7. DESeq2 标准化；
+8. VST；
+9. PCA；
+10. disease vs control 差异分析；
+11. 火山图；
+12. GO Biological Process 富集分析。
 
 主要输出：
 
@@ -919,7 +921,7 @@ du -sh /opt/bioinfo_course
 # 七、提醒
 
 1. 使用指定课程镜像时，`/opt/bioinfo_course` 是镜像内置课程数据目录，建议复制到自己的工作目录后操作。
-2. 使用 Colab 或其他环境时，下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
+2. 使用其他环境时，下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
 3. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
 4. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
 5. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
