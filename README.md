@@ -96,7 +96,7 @@ apt-get install -y tree
 
 ## 0.3 在 Colab 中打开 Notebook
 
-课程数据包里自带的 `.ipynb` 文件在解压后可以作为普通文件使用，但 Colab 不能直接打开 GitHub Release 压缩包内部的 Notebook。为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
+为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
 
 ```text
 04_rnaseq_matrix/00_simdata.ipynb
@@ -117,7 +117,9 @@ File -> Open notebook -> GitHub
 https://github.com/yf8578/bioinfo-course
 ```
 
-打开 Notebook 后，先按前面的步骤下载并解压 `bioinfo_course.tar.gz`，再运行分析代码。Notebook 使用 R 语言；如果使用普通 Linux/Jupyter 环境，需要先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
+04 章节的 Notebook 有仿真数据生成代码，可以支撑后续矩阵分析；使用时主要需要配置好 R 环境，并安装 Notebook 中需要的 R / Bioconductor 包。合并版 `00_simdata_and_RNAseq_analysis.ipynb` 已经在开头写入自动安装缺失包的代码。
+
+如果使用普通 Linux/Jupyter 环境，可以先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
 
 ## 0.4 手动下载、合并和解压数据
 
