@@ -894,49 +894,7 @@ cd 05_matrixeqtl
 
 ---
 
-# 六、教师维护：更新课程数据到镜像目录
-
-本节只适用于维护课程镜像的教师。如果你在工作目录中的 `bioinfo_course/` 更新了课程数据，需要保存回镜像内置目录 `/opt/bioinfo_course`，可以在 `bioinfo_course/` 的上一级目录运行：
-
-```bash
-sudo rm -rf /opt/bioinfo_course
-
-sudo cp -a bioinfo_course /opt/bioinfo_course
-
-cd /opt/bioinfo_course
-
-# 删除上游流程已有结果
-sudo rm -rf 03_rnaseq_upstream/sim_case_control/pipeline_result
-sudo mkdir -p 03_rnaseq_upstream/sim_case_control/pipeline_result
-
-# 删除 FastQC 已有结果
-sudo rm -rf 02_qc_fastqc/qc_report
-sudo mkdir -p 02_qc_fastqc/qc_report
-
-# 删除矩阵分析已有结果
-sudo rm -rf 04_rnaseq_matrix/teaching_results
-sudo rm -rf 04_rnaseq_matrix/teaching_figures
-sudo mkdir -p 04_rnaseq_matrix/teaching_results
-sudo mkdir -p 04_rnaseq_matrix/teaching_figures
-
-# 开放学生可读权限
-sudo chmod -R a+rX /opt/bioinfo_course
-
-# 检查
-tree -L 3 /opt/bioinfo_course
-```
-
-检查：
-
-```bash
-tree -L 3 /opt/bioinfo_course
-
-du -sh /opt/bioinfo_course
-```
-
----
-
-# 七、提醒
+# 六、提醒
 
 1. 使用指定课程镜像时，`/opt/bioinfo_course` 是镜像内置课程数据目录，建议复制到自己的工作目录后操作。
 2. 使用其他环境时，下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
