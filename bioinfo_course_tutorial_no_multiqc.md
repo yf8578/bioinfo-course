@@ -499,7 +499,42 @@ tree -L 3
 
 ---
 
-## 3.2 检查样本列表
+## 3.2 运行前注意事项：检查脚本路径
+
+RNA-seq 上游流程会调用多个 shell 脚本。运行前一定要先检查脚本中的输入和输出路径，确认它们与当前课程目录一致。
+
+重点检查：
+
+1. FASTQ 输入路径是否来自 `sim_case_control/sample.list`。
+2. 参考基因组路径是否指向 `ref/hg38.fa`。
+3. HISAT2 index 前缀是否指向 `ref/hisat2_index/hg38`。
+4. GTF 注释文件是否指向 `ref/hg38.refGene.gtf.gz` 或课程中实际使用的 GTF。
+5. 输出目录是否写到 `sim_case_control/pipeline_result/` 下。
+6. 脚本中是否还有旧的绝对路径，例如 `/data/work/...`、`/opt/...` 或其他个人目录。
+
+可以用下面的命令快速检查脚本中的路径：
+
+```bash
+sed -n '1,220p' scripts/make_sample_shells.sh
+
+sed -n '1,220p' scripts/run_featurecounts_clean_matrix.sh
+
+if [ -f scripts/run_all_sample_shells.sh ]; then
+  sed -n '1,220p' scripts/run_all_sample_shells.sh
+fi
+```
+
+也可以直接搜索脚本里的常见路径关键词：
+
+```bash
+grep -RInE '/data/work|/opt|/home|/Users|hg38|hisat2_index|refGene|pipeline_result|sample.list' scripts
+```
+
+如果是在 Codespaces、Colab 或自己的服务器中运行，建议优先使用相对路径，避免把脚本写死到某个固定目录。
+
+---
+
+## 3.3 检查样本列表
 
 ```bash
 cat sim_case_control/sample.list
@@ -539,7 +574,7 @@ done
 
 ---
 
-## 3.3 检查参考基因组、GTF 和 HISAT2 index
+## 3.4 检查参考基因组、GTF 和 HISAT2 index
 
 ```bash
 ls -lh ref/hg38.fa
@@ -576,7 +611,7 @@ hg38.8.ht2
 
 ---
 
-## 3.4 检查上游分析脚本
+## 3.5 检查上游分析脚本
 
 ```bash
 ls -lh scripts
@@ -636,7 +671,7 @@ chmod +x scripts/run_all_sample_shells.sh
 
 ---
 
-## 3.5 生成每个样本独立 shell
+## 3.6 生成每个样本独立 shell
 
 运行：
 
@@ -665,7 +700,7 @@ CASE_3.run.sh
 
 ---
 
-## 3.6 运行所有样本 shell
+## 3.7 运行所有样本 shell
 
 直接顺序运行所有样本：
 
@@ -700,7 +735,7 @@ samtools view/sort/index
 
 ---
 
-## 3.7 检查样本级结果
+## 3.8 检查样本级结果
 
 查看 fastp 结果：
 
@@ -751,7 +786,7 @@ done
 
 ---
 
-## 3.8 生成最终干净表达矩阵
+## 3.9 生成最终干净表达矩阵
 
 所有 BAM 都生成后，运行：
 
