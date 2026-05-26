@@ -2,45 +2,13 @@
 
 > 课程根目录：`bioinfo_course/`
 
-本教程后续命令默认从课程根目录 `bioinfo_course/` 开始运行。为了兼容指定镜像、Colab 和其他 Linux 环境，正文尽量使用相对路径，不强依赖 `/opt` 或 `/data/work`。
+本教程后续命令默认从课程根目录 `bioinfo_course/` 开始运行。为了兼容 Codespaces、Colab 和其他 Linux 环境，正文尽量使用相对路径。
 
 ---
 
 # 0. 数据准备与路径约定
 
-## 0.1 使用指定课程镜像
-
-如果使用课程指定镜像，课程数据已经内置在：
-
-```bash
-/opt/bioinfo_course
-```
-
-上课或练习时，先把只读或公共数据复制到自己的工作目录。下面以当前目录为工作目录：
-
-```bash
-cp -r /opt/bioinfo_course ./bioinfo_course
-
-cd bioinfo_course
-
-tree -L 2
-```
-
-如果平台要求使用 `/data/work`，也可以写成：
-
-```bash
-cd /data/work
-
-rm -rf bioinfo_course
-
-cp -r /opt/bioinfo_course ./bioinfo_course
-
-cd bioinfo_course
-
-tree -L 2
-```
-
-## 0.2 使用其他环境
+## 0.1 使用其他环境
 
 如果不使用课程镜像，可以直接从 GitHub Release 下载课程数据：
 
@@ -64,7 +32,7 @@ apt-get update
 apt-get install -y tree
 ```
 
-## 0.3 在 Colab 中打开 Notebook
+## 0.2 在 Colab 中打开 Notebook
 
 为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
 
@@ -91,7 +59,7 @@ https://github.com/yf8578/bioinfo-course
 
 如果使用普通 Linux/Jupyter 环境，可以先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
 
-## 0.4 手动下载、合并和解压数据
+## 0.3 手动下载、合并和解压数据
 
 如果需要手动处理分卷文件，可以使用下面的命令。三个 `part-*` 文件合并后就是完整的 `bioinfo_course.tar.gz`：
 
@@ -125,7 +93,7 @@ cd bioinfo_course
 shasum -a 256 -c SHA256SUMS
 ```
 
-## 0.5 后续命令的路径规则
+## 0.4 后续命令的路径规则
 
 完成上述任意一种准备方式后，当前目录应为：
 
@@ -896,8 +864,7 @@ cd 05_matrixeqtl
 
 # 六、提醒
 
-1. 使用指定课程镜像时，`/opt/bioinfo_course` 是镜像内置课程数据目录，建议复制到自己的工作目录后操作。
-2. 使用其他环境时，下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
-3. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
-4. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
-5. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
+1. 下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
+2. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
+3. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
+4. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
