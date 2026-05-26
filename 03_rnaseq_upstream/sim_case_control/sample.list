@@ -1,0 +1,6 @@
+CTRL_1 sim_case_control/fastq/CTRL_1_R1.fq.gz sim_case_control/fastq/CTRL_1_R2.fq.gz
+CTRL_2 sim_case_control/fastq/CTRL_2_R1.fq.gz sim_case_control/fastq/CTRL_2_R2.fq.gz
+CTRL_3 sim_case_control/fastq/CTRL_3_R1.fq.gz sim_case_control/fastq/CTRL_3_R2.fq.gz
+CASE_1 sim_case_control/fastq/CASE_1_R1.fq.gz sim_case_control/fastq/CASE_1_R2.fq.gz
+CASE_2 sim_case_control/fastq/CASE_2_R1.fq.gz sim_case_control/fastq/CASE_2_R2.fq.gz
+CASE_3 sim_case_control/fastq/CASE_3_R1.fq.gz sim_case_control/fastq/CASE_3_R2.fq.gz

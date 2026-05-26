@@ -1,28 +1,36 @@
 # 生物信息学入门课程：云平台实践教程
 
-> 课程根目录：`bioinfo_course/`
+> 课程根目录：仓库根目录
 
-本教程后续命令默认从课程根目录 `bioinfo_course/` 开始运行。为了兼容 Codespaces、Colab 和其他 Linux 环境，正文尽量使用相对路径。
+本教程后续命令默认从仓库根目录开始运行。为了兼容 Codespaces、Colab 和其他 Linux 环境，正文尽量使用相对路径。
 
 ---
 
 # 0. 数据准备与路径约定
 
-## 0.1 使用其他环境
+## 0.1 使用仓库中的课程目录
 
-如果不使用课程镜像，可以直接从 GitHub Release 下载课程数据：
+在 Codespaces 或克隆本仓库后，可以直接使用仓库中的课程目录，不需要再下载、合并或解压完整数据包：
 
 ```bash
-curl -L https://raw.githubusercontent.com/yf8578/bioinfo-course/main/download_bioinfo_course.sh -o download_bioinfo_course.sh
-
-bash download_bioinfo_course.sh
-
-tar -xzf bioinfo_course.tar.gz
-
-cd bioinfo_course
+ls -lh
 
 tree -L 2
 ```
+
+本仓库直接包含以下课程小文件和练习数据：
+
+```text
+00_docs/
+01_linux_shell/
+02_qc_fastqc/
+03_rnaseq_upstream/scripts/
+03_rnaseq_upstream/sim_case_control/
+04_rnaseq_matrix/
+05_matrixeqtl/
+```
+
+注意：`03_rnaseq_upstream/ref/` 中的 hg38 FASTA 和 HISAT2 index 文件非常大，不能作为普通 Git 文件直接上传到 GitHub。如果要完整运行 RNA-seq 上游 HISAT2 比对流程，需要自己准备参考基因组文件，或根据实际位置修改 shell 脚本中的参考文件路径。
 
 如果当前环境没有 `tree`，可以先跳过，或安装：
 
@@ -59,65 +67,21 @@ https://github.com/yf8578/bioinfo-course
 
 如果使用普通 Linux/Jupyter 环境，可以先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
 
-## 0.3 手动下载、合并和解压数据
+## 0.3 后续命令的路径规则
 
-如果需要手动处理分卷文件，可以使用下面的命令。三个 `part-*` 文件合并后就是完整的 `bioinfo_course.tar.gz`：
-
-```bash
-mkdir -p bioinfo_course_download
-
-cd bioinfo_course_download
-
-curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-00
-
-curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-01
-
-curl -L -C - -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/bioinfo_course.tar.gz.part-02
-
-curl -L -O https://github.com/yf8578/bioinfo-course/releases/download/v1.0.0/SHA256SUMS
-
-sha256sum -c SHA256SUMS
-
-cat bioinfo_course.tar.gz.part-* > ../bioinfo_course.tar.gz
-
-cd ..
-
-tar -xzf bioinfo_course.tar.gz
-
-cd bioinfo_course
-```
-
-在 macOS 或部分系统中，如果没有 `sha256sum`，可以改用：
-
-```bash
-shasum -a 256 -c SHA256SUMS
-```
-
-## 0.4 后续命令的路径规则
-
-完成上述任意一种准备方式后，当前目录应为：
-
-```bash
-bioinfo_course
-```
-
-后续章节默认从这里开始执行命令。每个章节开始前，先确认自己位于课程根目录。文档中的路径是教学示例，实际运行时需要根据自己的环境、数据所在位置和输出目录进行修改。进入子目录时使用相对路径，例如：
+进入仓库根目录后即可开始后续章节。每个章节开始前，先确认自己位于仓库根目录。文档中的路径是教学示例，实际运行时需要根据自己的环境、数据所在位置和输出目录进行修改。进入子目录时使用相对路径，例如：
 
 ```bash
 cd 02_qc_fastqc
 ```
 
-如果已经进入其他子目录，先回到课程根目录：
-
-```bash
-cd /path/to/bioinfo_course
-```
+如果已经进入其他子目录，先回到仓库根目录。
 
 ---
 
 # 1. 软件环境准备
 
-如果使用课程指定镜像，通常已经预装了本课程需要的软件，可以直接进入后续章节。如果使用 Colab、普通 Linux 服务器或新环境，可以按下面步骤安装 Miniforge 并创建 `bioinfo` 环境。
+如果使用 Codespaces、Colab、普通 Linux 服务器或新环境，可以按下面步骤安装 Miniforge 并创建 `bioinfo` 环境。
 
 ## 1.1 下载并安装 Miniforge
 

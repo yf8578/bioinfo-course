@@ -1,0 +1,7 @@
+sample	group
+CTRL_1	control
+CTRL_2	control
+CTRL_3	control
+CASE_1	case
+CASE_2	case
+CASE_3	case
