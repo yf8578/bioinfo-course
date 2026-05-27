@@ -1,8 +1,16 @@
-# Reference files
+# RNA-seq reference files
 
-The full hg38 FASTA and HISAT2 index are not stored directly in this Git repository because the files are larger than GitHub's normal file size limit.
+The full hg38 FASTA and HISAT2 index are not stored directly in this Git repository because the files are too large for normal GitHub files.
 
-If you run the full RNA-seq upstream alignment workflow, prepare the reference files here or update the shell scripts to point to your own reference directory:
+To download and prepare them, run this command from the repository root:
+
+```bash
+bash download_rnaseq_ref.sh
+```
+
+The script temporarily downloads the split course archive from GitHub Release, checks the SHA-256 checksums, extracts only `03_rnaseq_upstream/ref/`, and then removes the downloaded parts and temporary archive.
+
+Expected files after extraction:
 
 ```text
 03_rnaseq_upstream/ref/hg38.fa

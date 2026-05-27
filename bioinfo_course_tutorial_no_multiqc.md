@@ -30,7 +30,13 @@ tree -L 2
 05_matrixeqtl/
 ```
 
-注意：`03_rnaseq_upstream/ref/` 中的 hg38 FASTA 和 HISAT2 index 文件非常大，不能作为普通 Git 文件直接上传到 GitHub。如果要完整运行 RNA-seq 上游 HISAT2 比对流程，需要自己准备参考基因组文件，或根据实际位置修改 shell 脚本中的参考文件路径。
+注意：`03_rnaseq_upstream/ref/` 中的 hg38 FASTA 和 HISAT2 index 文件非常大，不能作为普通 Git 文件直接上传到 GitHub。如果要完整运行 RNA-seq 上游 HISAT2 比对流程，可以在仓库根目录运行：
+
+```bash
+bash download_rnaseq_ref.sh
+```
+
+该脚本会从 GitHub Release 临时下载课程数据分卷，只提取其中的 `03_rnaseq_upstream/ref/`，并在解压完成后自动删除下载分卷、校验文件和临时压缩包，避免占用 Codespace 磁盘空间。
 
 如果当前环境没有 `tree`，可以先跳过，或安装：
 
@@ -508,9 +514,21 @@ done
 
 ---
 
-## 3.4 检查参考基因组、GTF 和 HISAT2 index
+## 3.4 准备并检查参考基因组、GTF 和 HISAT2 index
+
+如果 `ref/` 目录下还没有 hg38 FASTA 和 HISAT2 index，先回到仓库根目录运行：
 
 ```bash
+bash download_rnaseq_ref.sh
+```
+
+脚本会从 GitHub Release 临时下载课程数据分卷，只解压其中的参考文件，并在解压完成后自动删除下载分卷和临时压缩包。
+
+然后回到 RNA-seq 上游目录检查：
+
+```bash
+cd 03_rnaseq_upstream
+
 ls -lh ref/hg38.fa
 
 ls -lh ref/hg38.refGene.gtf.gz
@@ -828,7 +846,7 @@ cd 05_matrixeqtl
 
 # 六、提醒
 
-1. 下载解压后进入 `bioinfo_course/`，后续命令按相对路径运行。
+1. 在仓库根目录运行课程命令，后续命令按相对路径执行。
 2. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
 3. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
 4. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
