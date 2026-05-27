@@ -834,3 +834,13 @@ cd 05_matrixeqtl
 2. `03_rnaseq_upstream` 的 FASTQ 来自 hg38 全基因组模拟 reads，用于上游流程教学，不用于解释真实差异表达。
 3. 真正的差异分析教学使用 `04_rnaseq_matrix` 中的模拟 RNA-seq count matrix。
 4. `featureCounts` 最终只讲一个文件：`gene_counts.clean_matrix.tsv`。
+
+---
+
+# 七、反馈与建议
+
+如果在使用过程中发现问题，或对课程内容、数据组织、脚本流程有改进建议，欢迎在 GitHub 仓库中提交 Issue，也可以通过邮件联系：
+
+```text
+zgangyf129@gmail.com
+```
