@@ -115,12 +115,14 @@ conda init zsh
 配置频道：
 
 ```bash
-conda config --add channels conda-forge
-
 conda config --add channels bioconda
+
+conda config --add channels conda-forge
 
 conda config --set channel_priority strict
 ```
+
+说明：`conda config --add channels` 通常会把新加的频道放到更高优先级，因此上面的顺序会让最终优先级变成 `conda-forge > bioconda`。`channel_priority strict` 表示严格按频道优先级解析依赖，优先使用高优先级频道中的包，减少不同频道混装导致的依赖冲突。
 
 ## 1.2 创建 bioinfo 环境
 
@@ -199,7 +201,8 @@ Rscript -e 'library(DESeq2); library(clusterProfiler); library(org.Hs.eg.db); li
 bioinfo_course/
 ├── 00_docs/
 │   ├── bioinfo_course_tutorial.md
-│   └── part1.md
+│   ├── bioinfo_course_tutorial_no_multiqc.md
+│   └── bioinfo_course_tutorial_v2.md
 ├── 01_linux_shell/
 │   ├── bash.sh
 │   └── Linux/
@@ -399,6 +402,14 @@ Adapter Content
 # 三、RNA-seq 上游流程：FASTQ 到干净表达矩阵
 
 > 说明：本部分 FASTQ 是基于 hg38 全基因组模拟的 reads，更适合用于教学演示上游流程。它不是严格的 RNA-seq 模拟数据，因此最终 count matrix 不应用于解释真实疾病差异表达。
+
+如果要完整运行 HISAT2 比对和 featureCounts 计数，先在仓库根目录下载大参考文件：
+
+```bash
+bash download_rnaseq_ref.sh
+```
+
+该命令会从 GitHub Release 临时下载课程数据分卷，只解压 `03_rnaseq_upstream/ref/`，解压完成后自动删除下载分卷、校验文件和临时压缩包。
 
 本部分流程：
 
