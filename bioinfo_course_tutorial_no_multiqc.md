@@ -46,34 +46,7 @@ apt-get update
 apt-get install -y tree
 ```
 
-## 0.2 在 Colab 中打开 Notebook
-
-为了方便上课，本仓库已经把 Notebook 小文件单独放在 GitHub 仓库中：
-
-```text
-04_rnaseq_matrix/00_simdata.ipynb
-04_rnaseq_matrix/01_RNA-seq_annotated.ipynb
-04_rnaseq_matrix/00_simdata_and_RNAseq_analysis.ipynb
-05_matrixeqtl/01_MatrixEQTL_demo_notebook.ipynb
-```
-
-可以在 Colab 中选择：
-
-```text
-File -> Open notebook -> GitHub
-```
-
-然后输入仓库地址：
-
-```text
-https://github.com/yf8578/bioinfo-course
-```
-
-04 章节的 Notebook 有仿真数据生成代码，可以支撑后续矩阵分析；使用时主要需要配置好 R 环境，并安装 Notebook 中需要的 R / Bioconductor 包。合并版 `00_simdata_and_RNAseq_analysis.ipynb` 已经在开头写入自动安装缺失包的代码。
-
-如果使用普通 Linux/Jupyter 环境，可以先创建并激活 `bioinfo` 环境，或者在 Jupyter 中选择 `R bioinfo` 内核。
-
-## 0.3 后续命令的路径规则
+## 0.2 后续命令的路径规则
 
 进入仓库根目录后即可开始后续章节。每个章节开始前，先确认自己位于仓库根目录。文档中的路径是教学示例，实际运行时需要根据自己的环境、数据所在位置和输出目录进行修改。进入子目录时使用相对路径，例如：
 
