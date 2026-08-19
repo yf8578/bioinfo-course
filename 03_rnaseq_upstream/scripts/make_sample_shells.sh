@@ -15,17 +15,18 @@ set -euo pipefail
 #
 # Example:
 #   bash make_sample_shells.sh \
-#     /data/work/sim_case_control/sample.list \
-#     /data/work/sim_case_control/pipeline_result
+#     sim_case_control/sample.list \
+#     sim_case_control/pipeline_result
 # ============================================================
 
 SAMPLE_LIST=$1
 OUTDIR=$2
 
 THREADS=8
+KEEP_CLEAN_FASTQ="${KEEP_CLEAN_FASTQ:-0}"
 
 # Reference settings
-HISAT2_INDEX="/data/work/ref/hisat2_index/hg38"
+HISAT2_INDEX="${HISAT2_INDEX:-ref/hisat2_index/hg38}"
 
 # Output directories
 SHELL_DIR="${OUTDIR}/shell"
@@ -92,6 +93,7 @@ FQ1="${FQ1}"
 FQ2="${FQ2}"
 
 THREADS=${THREADS}
+KEEP_CLEAN_FASTQ="${KEEP_CLEAN_FASTQ}"
 
 HISAT2_INDEX="${HISAT2_INDEX}"
 
@@ -161,7 +163,6 @@ fastp \\
 # Step 2. HISAT2 alignment
 # -----------------------------
 
-SAM="\${SAMPLE_ALIGN_DIR}/\${SAMPLE}.sam"
 SORTED_BAM="\${SAMPLE_ALIGN_DIR}/\${SAMPLE}.sorted.bam"
 
 echo "[INFO] Step 2: HISAT2"
@@ -171,22 +172,16 @@ hisat2 \\
   -x "\${HISAT2_INDEX}" \\
   -1 "\${CLEAN_R1}" \\
   -2 "\${CLEAN_R2}" \\
-  -S "\${SAM}" \\
   --summary-file "\${SAMPLE_ALIGN_DIR}/\${SAMPLE}.hisat2.summary.txt" \\
-  > "\${LOG_DIR}/\${SAMPLE}.hisat2.log" 2>&1
-
-# -----------------------------
-# Step 3. SAM to sorted BAM
-# -----------------------------
-
-echo "[INFO] Step 3: samtools sort/index"
-
-samtools view -@ "\${THREADS}" -bS "\${SAM}" | \\
-  samtools sort -@ "\${THREADS}" -o "\${SORTED_BAM}"
+  2> "\${LOG_DIR}/\${SAMPLE}.hisat2.log" | \\
+  samtools view -@ "\${THREADS}" -bS - | \\
+  samtools sort -@ "\${THREADS}" -m 512M -o "\${SORTED_BAM}"
 
 samtools index "\${SORTED_BAM}"
 
-rm -f "\${SAM}"
+if [ "\${KEEP_CLEAN_FASTQ}" != "1" ]; then
+    rm -f "\${CLEAN_R1}" "\${CLEAN_R2}"
+fi
 
 echo "============================================================"
 echo "[INFO] Finished sample: \${SAMPLE}"
@@ -206,4 +201,3 @@ echo "============================================================"
 echo "[INFO] All sample shell scripts generated."
 echo "[INFO] Shell directory: ${SHELL_DIR}"
 echo "============================================================"
-

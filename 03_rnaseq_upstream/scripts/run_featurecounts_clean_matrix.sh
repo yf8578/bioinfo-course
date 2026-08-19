@@ -21,12 +21,12 @@ OUTDIR=$1
 
 THREADS=8
 
-GTF_GZ="/data/work/hg38.refGene.gtf.gz"
-GTF="/data/work/hg38.refGene.gtf"
+GTF_GZ="${GTF_GZ:-ref/hg38.refGene.gtf.gz}"
 
 ALIGN_DIR="${OUTDIR}/02_hisat2"
 COUNT_DIR="${OUTDIR}/03_featureCounts"
 LOG_DIR="${OUTDIR}/logs"
+GTF="${COUNT_DIR}/hg38.refGene.gtf"
 
 mkdir -p "${COUNT_DIR}" "${LOG_DIR}"
 
@@ -34,15 +34,12 @@ mkdir -p "${COUNT_DIR}" "${LOG_DIR}"
 # 1. Prepare GTF
 # -----------------------------
 
-if [ ! -f "${GTF}" ]; then
-    if [ -f "${GTF_GZ}" ]; then
-        echo "[INFO] Decompressing GTF..."
-        gunzip -c "${GTF_GZ}" > "${GTF}"
-    else
-        echo "[ERROR] GTF not found: ${GTF}"
-        echo "[ERROR] GTF.gz also not found: ${GTF_GZ}"
-        exit 1
-    fi
+if [ -f "${GTF_GZ}" ]; then
+    echo "[INFO] Decompressing GTF into ${COUNT_DIR}..."
+    gunzip -c "${GTF_GZ}" > "${GTF}"
+elif [ ! -f "${GTF}" ]; then
+    echo "[ERROR] GTF.gz not found: ${GTF_GZ}"
+    exit 1
 fi
 
 # -----------------------------
@@ -107,41 +104,33 @@ echo "[INFO] featureCounts finished."
 cd "${COUNT_DIR}"
 
 python - <<'PY'
-import pandas as pd
+import csv
 from pathlib import Path
 
 tmp_file = Path(".featureCounts.tmp.txt")
 out_file = Path("gene_counts.clean_matrix.tsv")
 
-df = pd.read_csv(tmp_file, sep="\t", comment="#")
-
 annotation_cols = ["Geneid", "Chr", "Start", "End", "Strand", "Length"]
-count_cols = [c for c in df.columns if c not in annotation_cols]
-
-clean = df[["Geneid"] + count_cols].copy()
-
-# 将 BAM 路径列名转换为样本名
-new_cols = ["Geneid"]
-for c in count_cols:
-    sample = Path(c).name.replace(".sorted.bam", "")
-    new_cols.append(sample)
-
-clean.columns = new_cols
-
-# 只输出干净矩阵
-clean.to_csv(out_file, sep="\t", index=False)
+with tmp_file.open() as fh, out_file.open("w", newline="") as out:
+    reader = csv.reader((line for line in fh if not line.startswith("#")), delimiter="\t")
+    writer = csv.writer(out, delimiter="\t", lineterminator="\n")
+    header = next(reader)
+    count_indexes = [i for i, name in enumerate(header) if name not in annotation_cols]
+    writer.writerow(["Geneid"] + [Path(header[i]).name.replace(".sorted.bam", "") for i in count_indexes])
+    n = 0
+    for row in reader:
+        writer.writerow([row[0]] + [row[i] for i in count_indexes])
+        n += 1
 
 print("[INFO] Clean matrix generated:", out_file)
-print("[INFO] Matrix shape:", clean.shape)
-print(clean.head())
+print("[INFO] Number of genes:", n)
 PY
 
 # 删除临时 featureCounts 原始输出，只保留干净矩阵
-rm -f "${TMP_COUNTS}" "${TMP_COUNTS}.summary"
+rm -f "${TMP_COUNTS}" "${TMP_COUNTS}.summary" "${GTF}"
 
 echo "============================================================"
 echo "[INFO] Done."
 echo "[INFO] Clean matrix:"
 echo "${COUNT_DIR}/gene_counts.clean_matrix.tsv"
 echo "============================================================"
-

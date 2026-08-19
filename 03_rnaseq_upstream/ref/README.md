@@ -8,7 +8,7 @@ To download and prepare them, run this command from the repository root:
 bash download_rnaseq_ref.sh
 ```
 
-The script temporarily downloads the split course archive from GitHub Release, checks the SHA-256 checksums, extracts only `03_rnaseq_upstream/ref/`, and then removes the downloaded parts and temporary archive.
+The script streams the split course archive from GitHub Release, extracts only `03_rnaseq_upstream/ref/`, and does not keep the downloaded split parts or an extra merged archive on disk. This reduces peak disk usage in GitHub Codespaces.
 
 Expected files after extraction:
 

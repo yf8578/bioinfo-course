@@ -5,14 +5,17 @@ set -euo pipefail
 # 0. Basic settings
 # =========================
 
-REF="/data/Public/DCS_Reference_hg38/reference/hg38.fa"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COURSE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-WORKDIR="/data/work/sim_case_control"
+REF="${REF:-${COURSE_DIR}/ref/hg38.fa}"
+
+WORKDIR="${WORKDIR:-${COURSE_DIR}/sim_case_control}"
 FASTQ_DIR="${WORKDIR}/fastq"
-SCRIPT_DIR="${WORKDIR}/scripts"
 LOG_DIR="${WORKDIR}/logs"
+FASTQ_REL_PREFIX="${FASTQ_REL_PREFIX:-sim_case_control/fastq}"
 
-mkdir -p "${FASTQ_DIR}" "${SCRIPT_DIR}" "${LOG_DIR}"
+mkdir -p "${FASTQ_DIR}" "${LOG_DIR}"
 
 cd "${FASTQ_DIR}"
 
@@ -113,12 +116,12 @@ gzip -f *.fq
 cd "${WORKDIR}"
 
 cat > sample.list <<EOF2
-CTRL_1 ${FASTQ_DIR}/CTRL_1_R1.fq.gz ${FASTQ_DIR}/CTRL_1_R2.fq.gz
-CTRL_2 ${FASTQ_DIR}/CTRL_2_R1.fq.gz ${FASTQ_DIR}/CTRL_2_R2.fq.gz
-CTRL_3 ${FASTQ_DIR}/CTRL_3_R1.fq.gz ${FASTQ_DIR}/CTRL_3_R2.fq.gz
-CASE_1 ${FASTQ_DIR}/CASE_1_R1.fq.gz ${FASTQ_DIR}/CASE_1_R2.fq.gz
-CASE_2 ${FASTQ_DIR}/CASE_2_R1.fq.gz ${FASTQ_DIR}/CASE_2_R2.fq.gz
-CASE_3 ${FASTQ_DIR}/CASE_3_R1.fq.gz ${FASTQ_DIR}/CASE_3_R2.fq.gz
+CTRL_1 ${FASTQ_REL_PREFIX}/CTRL_1_R1.fq.gz ${FASTQ_REL_PREFIX}/CTRL_1_R2.fq.gz
+CTRL_2 ${FASTQ_REL_PREFIX}/CTRL_2_R1.fq.gz ${FASTQ_REL_PREFIX}/CTRL_2_R2.fq.gz
+CTRL_3 ${FASTQ_REL_PREFIX}/CTRL_3_R1.fq.gz ${FASTQ_REL_PREFIX}/CTRL_3_R2.fq.gz
+CASE_1 ${FASTQ_REL_PREFIX}/CASE_1_R1.fq.gz ${FASTQ_REL_PREFIX}/CASE_1_R2.fq.gz
+CASE_2 ${FASTQ_REL_PREFIX}/CASE_2_R1.fq.gz ${FASTQ_REL_PREFIX}/CASE_2_R2.fq.gz
+CASE_3 ${FASTQ_REL_PREFIX}/CASE_3_R1.fq.gz ${FASTQ_REL_PREFIX}/CASE_3_R2.fq.gz
 EOF2
 
 # =========================

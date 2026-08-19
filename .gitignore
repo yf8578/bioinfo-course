@@ -2,3 +2,4 @@ release-assets/
 .DS_Store
 .ipynb_checkpoints/
 .download_rnaseq_ref/
+outputs/

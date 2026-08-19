@@ -2,7 +2,7 @@
 
 > 课程根目录：仓库根目录
 
-本教程后续命令默认从仓库根目录开始运行。为了兼容 Codespaces、Colab 和其他 Linux 环境，正文尽量使用相对路径。
+本教程后续命令默认从仓库根目录开始运行。为了兼容 Codespaces、Colab 和其他 Linux 环境，正文尽量使用相对路径。Codespaces 默认磁盘空间有限，完整运行 RNA-seq 上游流程前，建议先清理安装包和 conda 缓存。
 
 ---
 
@@ -36,7 +36,13 @@ tree -L 2
 bash download_rnaseq_ref.sh
 ```
 
-该脚本会从 GitHub Release 临时下载课程数据分卷，只提取其中的 `03_rnaseq_upstream/ref/`，并在解压完成后自动删除下载分卷、校验文件和临时压缩包，避免占用 Codespace 磁盘空间。
+该脚本会从 GitHub Release 以流式方式下载课程数据分卷，只提取其中的 `03_rnaseq_upstream/ref/`。默认不会在磁盘上保留下载分卷，也不会额外生成合并后的 5G 压缩包，适合 32G Codespace 使用。
+
+如果提示 `No space left on device`，先回到仓库根目录清理可再生成文件：
+
+```bash
+bash cleanup_codespace_storage.sh
+```
 
 如果当前环境没有 `tree`，可以先跳过，或安装：
 
@@ -80,6 +86,12 @@ bash "Miniforge3-$(uname)-$(uname -m).sh" -b -p "${HOME}/miniforge3"
 
 ```bash
 source "${HOME}/miniforge3/etc/profile.d/conda.sh"
+```
+
+安装完成后可以删除 Miniforge 安装脚本，避免占用 Codespace 磁盘：
+
+```bash
+rm -f Miniforge3-*.sh
 ```
 
 可选：把 conda 初始化到 shell。Linux/Colab 常用 bash：
@@ -173,6 +185,12 @@ featureCounts -v
 R --version
 
 Rscript -e 'library(DESeq2); library(clusterProfiler); library(org.Hs.eg.db); library(enrichplot); library(MatrixEQTL); sessionInfo()'
+```
+
+清理 conda 下载缓存。软件已经安装到环境中，缓存可以删除：
+
+```bash
+conda clean -afy
 ```
 
 ---
@@ -385,13 +403,29 @@ Adapter Content
 
 > 说明：本部分 FASTQ 是基于 hg38 全基因组模拟的 reads，更适合用于教学演示上游流程。它不是严格的 RNA-seq 模拟数据，因此最终 count matrix 不应用于解释真实疾病差异表达。
 
+Codespaces 的磁盘空间是一个系统资源。完整上游流程会同时涉及参考基因组、HISAT2 index、clean FASTQ、BAM、日志和 conda 缓存。判断空间时不要只看 `03_rnaseq_upstream` 的最终大小，还要看整个工作区和 Home 目录：
+
+```bash
+df -h .
+
+du -sh ~ /workspaces/* 2>/dev/null | sort -h
+```
+
+如果空间不足，先清理可再生成文件：
+
+```bash
+cd /workspaces/bioinfo-course
+
+bash cleanup_codespace_storage.sh
+```
+
 如果要完整运行 HISAT2 比对和 featureCounts 计数，先在仓库根目录下载大参考文件：
 
 ```bash
 bash download_rnaseq_ref.sh
 ```
 
-该命令会从 GitHub Release 临时下载课程数据分卷，只解压 `03_rnaseq_upstream/ref/`，解压完成后自动删除下载分卷、校验文件和临时压缩包。
+该命令会从 GitHub Release 流式下载课程数据分卷，只解压 `03_rnaseq_upstream/ref/`，不会额外落地合并后的大压缩包。
 
 本部分流程：
 
@@ -431,7 +465,7 @@ RNA-seq 上游流程会调用多个 shell 脚本。运行前一定要先检查�
 
 1. FASTQ 输入路径是否来自 `sim_case_control/sample.list`。
 2. 参考基因组路径是否指向 `ref/hg38.fa`。
-3. HISAT2 index 前缀是否指向 `ref/hisat2_index/hg38`。
+3. HISAT2 index 前缀是否指向 `ref/hisat2_index/hg38`。脚本默认使用这个相对路径；如果使用自己的参考文件，可以在运行前设置 `HISAT2_INDEX=/your/path/hg38`。
 4. GTF 注释文件是否指向 `ref/hg38.refGene.gtf.gz` 或课程中实际使用的 GTF。
 5. 输出目录是否写到 `sim_case_control/pipeline_result/` 下。
 6. 脚本中是否还有旧的绝对路径，例如 `/data/work/...`、`/opt/...` 或其他个人目录。
@@ -506,7 +540,7 @@ done
 bash download_rnaseq_ref.sh
 ```
 
-脚本会从 GitHub Release 临时下载课程数据分卷，只解压其中的参考文件，并在解压完成后自动删除下载分卷和临时压缩包。
+脚本会从 GitHub Release 流式下载课程数据分卷，只解压其中的参考文件，不会在磁盘上额外保留下载分卷或合并后的大压缩包。
 
 然后回到 RNA-seq 上游目录检查：
 
@@ -615,6 +649,12 @@ chmod +x scripts/run_all_sample_shells.sh
 bash scripts/make_sample_shells.sh \
   sim_case_control/sample.list \
   sim_case_control/pipeline_result
+```
+
+默认情况下，样本脚本会在 HISAT2 比对完成后删除 fastp 产生的 clean FASTQ，并且不会生成中间 SAM 文件，以减少磁盘占用。如果需要保留 clean FASTQ，可以在生成脚本前设置：
+
+```bash
+export KEEP_CLEAN_FASTQ=1
 ```
 
 查看生成的样本脚本：

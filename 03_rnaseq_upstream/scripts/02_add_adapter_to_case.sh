@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FASTQ_DIR="/data/work/sim_case_control/fastq"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COURSE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+FASTQ_DIR="${FASTQ_DIR:-${COURSE_DIR}/sim_case_control/fastq}"
+KEEP_ORIGINAL_FASTQ="${KEEP_ORIGINAL_FASTQ:-0}"
 
 R1_ADAPTER="AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 R2_ADAPTER="AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
@@ -58,7 +62,12 @@ do
     }' "${SAMPLE}_R2.original.fq" > "${SAMPLE}_R2.fq"
 
     gzip -f "${SAMPLE}_R1.fq" "${SAMPLE}_R2.fq"
-    gzip -f "${SAMPLE}_R1.original.fq" "${SAMPLE}_R2.original.fq"
+
+    if [ "${KEEP_ORIGINAL_FASTQ}" = "1" ]; then
+        gzip -f "${SAMPLE}_R1.original.fq" "${SAMPLE}_R2.original.fq"
+    else
+        rm -f "${SAMPLE}_R1.original.fq" "${SAMPLE}_R2.original.fq"
+    fi
 
 done
 
