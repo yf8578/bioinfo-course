@@ -22,7 +22,7 @@ set -euo pipefail
 SAMPLE_LIST=$1
 OUTDIR=$2
 
-THREADS="${THREADS:-2}"
+THREADS=8
 KEEP_CLEAN_FASTQ="${KEEP_CLEAN_FASTQ:-0}"
 
 # Reference settings

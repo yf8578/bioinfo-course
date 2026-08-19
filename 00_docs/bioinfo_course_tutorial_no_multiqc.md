@@ -403,54 +403,6 @@ Adapter Content
 
 > 说明：本部分 FASTQ 是基于 hg38 全基因组模拟的 reads，更适合用于教学演示上游流程。它不是严格的 RNA-seq 模拟数据，因此最终 count matrix 不应用于解释真实疾病差异表达。
 
-## 3.0 一键运行完整上游流程
-
-如果已经按前文创建并激活过 `bioinfo` 环境，在 Codespaces 仓库根目录直接运行：
-
-```bash
-cd /workspaces/bioinfo-course
-
-bash run_rnaseq_upstream_codespace.sh
-```
-
-这个脚本会按顺序完成：
-
-```text
-清理可再生成文件和 conda 缓存
-检查 bioinfo 环境和必要软件
-流式下载并解压 03_rnaseq_upstream/ref/
-检查 sample.list 和 FASTQ
-生成每个样本的 shell 脚本
-运行 fastp、HISAT2、samtools
-运行 featureCounts
-输出 gene_counts.clean_matrix.tsv
-```
-
-默认设置适合 32G Codespace：
-
-```text
-THREADS=2
-KEEP_CLEAN_FASTQ=0
-不生成中间 SAM 文件
-不保留下载分卷和合并压缩包
-```
-
-如果想保留 fastp 产生的 clean FASTQ，可以运行：
-
-```bash
-export KEEP_CLEAN_FASTQ=1
-
-bash run_rnaseq_upstream_codespace.sh
-```
-
-如果不想在脚本开头清理已有 `pipeline_result`，可以运行：
-
-```bash
-export SKIP_CLEANUP=1
-
-bash run_rnaseq_upstream_codespace.sh
-```
-
 Codespaces 的磁盘空间是一个系统资源。完整上游流程会同时涉及参考基因组、HISAT2 index、clean FASTQ、BAM、日志和 conda 缓存。判断空间时不要只看 `03_rnaseq_upstream` 的最终大小，还要看整个工作区和 Home 目录：
 
 ```bash
@@ -467,7 +419,7 @@ cd /workspaces/bioinfo-course
 bash cleanup_codespace_storage.sh
 ```
 
-如果选择手动分步运行，先在仓库根目录下载大参考文件：
+如果要完整运行 HISAT2 比对和 featureCounts 计数，先在仓库根目录下载大参考文件：
 
 ```bash
 bash download_rnaseq_ref.sh
