@@ -19,7 +19,7 @@ set -euo pipefail
 
 OUTDIR=$1
 
-THREADS=8
+THREADS="${THREADS:-2}"
 
 GTF_GZ="${GTF_GZ:-ref/hg38.refGene.gtf.gz}"
 
